@@ -1,0 +1,2 @@
+This is and user end part of the Ollama-Park AI assistant project.
+It was made on Unity 6.2, and in this repository is only, Project folder, which contains scripts, scenes, materials and all other objects which are added by developer, not by Unity. Other required assets are written on "Required assets.txt" file
