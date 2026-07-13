@@ -8,6 +8,8 @@ public class GetVoice : MonoBehaviour
 {
 	public AppVoiceExperience voice;
 	public TextMeshProUGUI text;
+	public OVRHand leftHand;
+	private bool wasPinching;
 	
 	// Start is called on the frame when a script is enabled just before any of the Update methods is called the first time.
 	protected void Start()
@@ -22,6 +24,22 @@ public class GetVoice : MonoBehaviour
 		{
 			StartListening();
 		}
+		CheckPinch(leftHand);
+	}
+	
+	void CheckPinch(OVRHand hand)
+	{
+		if (hand == null || !hand.IsTracked)
+			return;
+
+		bool isPinching = hand.GetFingerPinchStrength(OVRHand.HandFinger.Middle) > 0.8f;
+
+		if (isPinching && !wasPinching)
+		{
+			StartListening();
+		}
+
+		wasPinching = isPinching;
 	}
 	
 	public void OnEnable()

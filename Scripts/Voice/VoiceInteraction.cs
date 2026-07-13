@@ -17,6 +17,10 @@ public class VoiceInteraction : MonoBehaviour
 	public int MaxTTSLength;
 	public float waitBeforeSpeak = 1.0f;
 	
+	public OVRHand leftHand;
+	private bool wasPinching;
+
+	
     void Start()
     {
 	    if(writer == null)
@@ -40,16 +44,34 @@ public class VoiceInteraction : MonoBehaviour
 	    {
 	    	writer.StartListen();
 	    }
+	    CheckPinch(leftHand);
     }
+    
+	void CheckPinch(OVRHand hand)
+	{
+		if (hand == null || !hand.IsTracked)
+			return;
+
+		bool isPinching = hand.GetFingerPinchStrength(OVRHand.HandFinger.Middle) > 0.8f;
+
+		if (isPinching && !wasPinching)
+		{
+			writer.StartListen();
+		}
+
+		wasPinching = isPinching;
+	}
     
 	public void Request()
 	{
 		string requestText = writer.GetRequest();
+		Debug.Log("UNITY SALIH: Request Started");
 		LlmRequestDTOs request = new LlmRequestDTOs
 		{
-			userRequest = requestText
+			request = requestText
 		};
 		string json = JsonUtility.ToJson(request);
+		Debug.Log("UNITY SALIH: json request is:" + json);
 		Api.LlmPostMethod(helpEndpoint, json);
 	}
 	
